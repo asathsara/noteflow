@@ -34,7 +34,7 @@ export function NoteTable() {
             <TableCell>{note.title}</TableCell>
             <TableCell>{note.createdAt}</TableCell>
             <TableCell className="text-right">
-              <Button variant="outline" size="sm" className="flex items-center gap-1">
+              <Button variant="outline" size="sm">
                 <Edit className="w-4 h-4" />
                 Edit
               </Button>
