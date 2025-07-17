@@ -22,6 +22,7 @@ const menuItems = [
 ]
 
 export function AppSidebar() {
+  
   const handleClick = (action: string) => {
     switch (action) {
       case "settings":
