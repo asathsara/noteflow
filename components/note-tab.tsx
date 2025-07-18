@@ -15,7 +15,6 @@ export function NoteTab({ note, setNote, onTriggerAI }: NoteTabProps) {
 
     return (
         <>
-
             <Tiptap note={note} setNote={setNote} />
             <Button className="mt-4" onClick={onTriggerAI}>
                 <Sparkles className="mr-2 h-4 w-4" />

@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Sparkles } from "lucide-react"
+import { Sparkles, Trash } from "lucide-react"
 import { QuestionBlock } from "./question-block"
 
 interface QuestionBlock {
@@ -15,22 +15,29 @@ interface QuestionTabProps {
   onTriggerAI: () => void
 }
 
-export function QuestionTab(
-  { questionBlocks, setQuestionBlocks, onTriggerAI }: QuestionTabProps) {
-
-  const handleQuestionBlock = (index: number, field: "question" | "answer", value: string) => {
-
-    
+export function QuestionTab({
+  questionBlocks,
+  setQuestionBlocks,
+  onTriggerAI,
+}: QuestionTabProps) {
+  const handleQuestionBlock = (
+    index: number,
+    field: "question" | "answer",
+    value: string
+  ) => {
     const updated = [...questionBlocks]
-
-    // update the specific field of the block at the given index
     updated[index][field] = value
     setQuestionBlocks(updated)
   }
 
-  // Function to add a new question block
   const addQuestionBlock = () => {
     setQuestionBlocks([...questionBlocks, { question: "", answer: "" }])
+  }
+
+  const deleteQuestionBlock = (index: number) => {
+    const updated = [...questionBlocks]
+    updated.splice(index, 1)
+    setQuestionBlocks(updated)
   }
 
   return (
@@ -41,6 +48,7 @@ export function QuestionTab(
           question={block.question}
           answer={block.answer}
           onChange={(field, value) => handleQuestionBlock(i, field, value)}
+          onDelete={() => deleteQuestionBlock(i)}
         />
       ))}
 
