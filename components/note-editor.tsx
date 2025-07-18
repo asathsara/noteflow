@@ -4,12 +4,12 @@ import { useState } from "react"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Input } from "@/components/ui/input"
 import { NoteTab } from "./note-tab"
-import { QATab } from "./qa-tab"
+import { QuestionTab } from "./question-tab"
 
 export function NoteEditor() {
   const [title, setTitle] = useState("")
   const [note, setNote] = useState("")
-  const [qaBlocks, setQaBlocks] = useState([{ question: "", answer: "" }])
+  const [questionBlocks, setQuestionBlocks] = useState([{ question: "", answer: "" }])
 
   const triggerAI = () => {
     console.log("Triggering AI chat...")
@@ -27,15 +27,19 @@ export function NoteEditor() {
       <Tabs defaultValue="write" className="w-full">
         <TabsList>
           <TabsTrigger value="write">Write</TabsTrigger>
-          <TabsTrigger value="qa">Q & A</TabsTrigger>
+          <TabsTrigger value="question">Question</TabsTrigger>
         </TabsList>
 
         <TabsContent value="write">
           <NoteTab note={note} setNote={setNote} onTriggerAI={triggerAI} />
         </TabsContent>
 
-        <TabsContent value="qa">
-          <QATab qaBlocks={qaBlocks} setQaBlocks={setQaBlocks} onTriggerAI={triggerAI} />
+        <TabsContent value="question">
+          <QuestionTab
+            questionBlocks={questionBlocks}
+            setQuestionBlocks={setQuestionBlocks}
+            onTriggerAI={triggerAI}
+          />
         </TabsContent>
       </Tabs>
     </div>
