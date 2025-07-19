@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Sparkles } from "lucide-react"
 
 import Tiptap from "./tip-tap"
+import { AskAIDialog } from "./ask-ai-dialog"
 
 interface NoteTabProps {
     note: string
@@ -12,14 +13,14 @@ interface NoteTabProps {
 }
 
 export function NoteTab({ note, setNote, onTriggerAI }: NoteTabProps) {
+    const handleAIResponse = (response: string) => {
+        setNote(note + "\n\n" + response)
+    }
 
     return (
         <>
             <Tiptap note={note} setNote={setNote} />
-            <Button className="mt-4" onClick={onTriggerAI}>
-                <Sparkles className="mr-2 h-4 w-4" />
-                Ask AI
-            </Button>
+            <AskAIDialog onAnswer={handleAIResponse} />
         </>
     )
 }

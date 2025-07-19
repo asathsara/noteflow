@@ -1,11 +1,14 @@
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 
 export function NoteButton() {
   return (
-    <Button variant="default" className="flex items-center gap-2">
-      <Plus className="w-4 h-4" />
-      New Note
-    </Button>
+    <Link href="/notebook">
+      <Button variant="default" className="flex items-center gap-2 cursor-pointer">
+        <Plus className="w-4 h-4" />
+        New Note
+      </Button>
+    </Link>
   )
 }

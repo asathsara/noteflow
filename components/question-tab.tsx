@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Sparkles, Trash } from "lucide-react"
+import { Sparkles } from "lucide-react"
 import { QuestionBlock } from "./question-block"
 
 interface QuestionBlock {
