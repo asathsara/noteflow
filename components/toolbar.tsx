@@ -4,7 +4,8 @@ import {
     Italic,
     Strikethrough,
     Code,
-    Heading2
+    Heading2,
+    Eraser
 } from "lucide-react";
 
 import { Toggle } from "@/components/ui/toggle";
@@ -63,6 +64,15 @@ export function Toolbar({ editor }: Props) {
                 <Code className="h-4 w-4" />
             </Toggle>
 
+            <button
+                type="button"
+                className="cursor-pointer"
+                onClick={() => {
+                    editor?.commands.clearContent();
+                }}
+            >
+                <Eraser className="h-4 w-4" />
+            </button>
 
 
         </div>
