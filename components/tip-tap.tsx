@@ -5,6 +5,7 @@ import { EditorContent, useEditor } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
 import { Heading } from "@tiptap/extension-heading"
 import { Toolbar } from "./toolbar"
+import { useEffect } from "react"
 
 interface TipTapProps {
     note: string
@@ -13,6 +14,9 @@ interface TipTapProps {
 
 
 const Tiptap = ({ note, setNote }: TipTapProps) => {
+
+
+
     const editor = useEditor({
         extensions: [
             StarterKit,
@@ -38,6 +42,11 @@ const Tiptap = ({ note, setNote }: TipTapProps) => {
         immediatelyRender: false,
     })
 
+    useEffect(() => {
+        if (editor && note !== editor.getHTML()) {
+            editor.commands.setContent(note)
+        }
+    }, [note, editor])
 
     return (
         <>
