@@ -16,22 +16,27 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { Sparkles } from "lucide-react"
 
-interface AskAIDialogProps {
+interface AskAIQuestionDialogProps {
     onBlocksGenerated: (blocks: { question: string; answer: string }[]) => void
 }
 
-export function AskAIQuestionDialog({ onBlocksGenerated }: AskAIDialogProps) {
-    const [open, setOpen] = useState(false)
-    const [topic, setTopic] = useState("")
-    const [count, setCount] = useState("5")
-    const [type, setType] = useState("qna") // "qna" or "q"
+export function AskAIQuestionDialog({ onBlocksGenerated }: AskAIQuestionDialogProps) {
+    const [open, setOpen] = useState(false) // Dialog state
+    const [topic, setTopic] = useState("") // Topic input
+    const [count, setCount] = useState("5") // Number of questions input
+    const [type, setType] = useState("qna")  // Question type: "qna" or "q"
     const [loading, setLoading] = useState(false)
 
     const handleGenerate = async () => {
+
+        // Set loading state to true while fetching
         setLoading(true)
+
         try {
+            // generate a prompt using user inputs for generating questions
+            // lib/utils.ts
             const prompt = buildGeminiPrompt(topic, parseInt(count), type)
-            console.log(prompt);
+            
             const response = await fetch("/api/gemini", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -39,18 +44,21 @@ export function AskAIQuestionDialog({ onBlocksGenerated }: AskAIDialogProps) {
 
             })
 
-
-
             const data = await response.json()
             const blocks = parseGeminiResponse(data.answer, type)
             onBlocksGenerated(blocks)
+
+            // Reset all fields after generation
             setOpen(false)
             setTopic("")
             setCount("5")
             setType("qna")
+
         } catch (error) {
             console.error("Error fetching AI response:", error)
         } finally {
+
+            // Reset loading state
             setLoading(false)
         }
     }
@@ -71,6 +79,7 @@ export function AskAIQuestionDialog({ onBlocksGenerated }: AskAIDialogProps) {
                     <div>
                         <Label>Topic</Label>
                         <Input
+                            className="mt-2"
                             value={topic}
                             onChange={(e) => setTopic(e.target.value)}
                             placeholder="e.g. React, JavaScript"
@@ -80,6 +89,7 @@ export function AskAIQuestionDialog({ onBlocksGenerated }: AskAIDialogProps) {
                     <div>
                         <Label>Number of Questions</Label>
                         <Input
+                            className="mt-2"
                             type="number"
                             min={1}
                             max={50}
@@ -91,7 +101,7 @@ export function AskAIQuestionDialog({ onBlocksGenerated }: AskAIDialogProps) {
                     <div>
                         <Label>Type</Label>
                         <Select value={type} onValueChange={setType}>
-                            <SelectTrigger>
+                            <SelectTrigger className="mt-2">
                                 <SelectValue placeholder="Select type" />
                             </SelectTrigger>
                             <SelectContent>
@@ -102,6 +112,7 @@ export function AskAIQuestionDialog({ onBlocksGenerated }: AskAIDialogProps) {
                     </div>
 
                     <Button
+                        className="w-full mt-4"
                         onClick={handleGenerate}
                         disabled={loading || !topic || !count}
                     >
