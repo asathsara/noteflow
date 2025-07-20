@@ -1,8 +1,7 @@
-// components/AskAIDialog.tsx
 "use client"
 
 import { useState } from "react"
-import { buildGeminiPrompt, parseGeminiResponse } from "@/lib/utils"
+import { buildGeminiPrompt, parseGeminiResponse } from "@/lib/gemini/gemini"
 import {
     Dialog,
     DialogTrigger,
