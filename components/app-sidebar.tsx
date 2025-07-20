@@ -11,9 +11,8 @@ import {
   SidebarMenuButton,
   SidebarHeader,
 } from "@/components/ui/sidebar"
-
 import { PenTool, Settings, Trash2, User } from "lucide-react"
-
+import { ThemeToggle } from "@/components/theme-toggle"
 
 const menuItems = [
   { title: "Settings", icon: Settings, action: "settings" },
@@ -22,25 +21,22 @@ const menuItems = [
 ]
 
 export function AppSidebar() {
-  
   const handleClick = (action: string) => {
     switch (action) {
       case "settings":
-        // Handle settings click
         console.log("Settings clicked")
         break
       case "delete":
-        // Handle delete click
         console.log("Delete clicked")
         break
       case "user":
-        // Handle user click
         console.log("User clicked")
         break
       default:
         console.warn("Unknown action:", action)
     }
   }
+
   return (
     <Sidebar>
       <SidebarHeader className="flex flex-col items-center py-8">
@@ -66,12 +62,14 @@ export function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              <ThemeToggle />
             </SidebarMenu>
+
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter>
+      <SidebarFooter className="flex flex-col items-center gap-2 pb-4">
         <p className="text-xs text-muted-foreground text-center w-full">© 2025 NoteFlow</p>
       </SidebarFooter>
     </Sidebar>
