@@ -1,4 +1,3 @@
-
 import {
     Bold,
     Italic,
@@ -15,7 +14,6 @@ import { Editor } from "@tiptap/react";
 type Props = {
     editor: Editor | null;
 }
-
 
 export function Toolbar({ editor }: Props) {
 

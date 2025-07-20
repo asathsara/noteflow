@@ -7,7 +7,6 @@ import { convertMarkdownToHTML } from "@/lib/utils"
 interface NoteTabProps {
     note: string
     setNote: (value: string) => void
-    onTriggerAI: () => void
 
 }
 

@@ -11,10 +11,6 @@ export function NoteEditor() {
   const [note, setNote] = useState("")
   const [questionBlocks, setQuestionBlocks] = useState([{ question: "", answer: "" }])
 
-  const triggerAI = () => {
-    console.log("Triggering AI chat...")
-  }
-
   return (
     <div className="space-y-6">
       <Input
@@ -31,14 +27,13 @@ export function NoteEditor() {
         </TabsList>
 
         <TabsContent value="write">
-          <NoteTab note={note} setNote={setNote} onTriggerAI={triggerAI} />
+          <NoteTab note={note} setNote={setNote}  />
         </TabsContent>
 
         <TabsContent value="question">
           <QuestionTab
             questionBlocks={questionBlocks}
             setQuestionBlocks={setQuestionBlocks}
-            onTriggerAI={triggerAI}
           />
         </TabsContent>
       </Tabs>

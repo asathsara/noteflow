@@ -113,7 +113,12 @@ export function AskAIQuestionDialog({ onBlocksGenerated }: AskAIQuestionDialogPr
                     <Button
                         className="w-full mt-4"
                         onClick={handleGenerate}
-                        disabled={loading || !topic || !count}
+                        disabled={
+                            loading ||
+                            !topic ||
+                            !count ||
+                            parseInt(count) > 50
+                        }
                     >
                         {loading ? "Generating..." : "Generate"}
                     </Button>
