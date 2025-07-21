@@ -5,7 +5,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Input } from "@/components/ui/input"
 import { NoteTab } from "./note-tab"
 import { QuestionTab } from "./question-tab"
-import { addNotebook,  Notebook,  updateNotebook } from "@/lib/local-storage"
+import { addNotebook, Notebook, updateNotebook } from "@/lib/local-storage"
 
 
 type Props = {
@@ -13,13 +13,25 @@ type Props = {
 }
 
 export function NoteEditor({ initialNotebook }: Props) {
+
   const [title, setTitle] = useState(initialNotebook?.title || "")
   const [note, setNote] = useState(initialNotebook?.note || "")
   const [questionBlocks, setQuestionBlocks] = useState(
     initialNotebook?.questionBlocks || [{ question: "", answer: "" }]
   )
 
+
   const [notebookId, setNotebookId] = useState(initialNotebook?.id || null)
+
+  useEffect(() => {
+    if (!initialNotebook) return;
+
+    setTitle(initialNotebook.title || "");
+    setNote(initialNotebook.note || "");
+    setQuestionBlocks(initialNotebook.questionBlocks || [{ question: "", answer: "" }]);
+    setNotebookId(initialNotebook.id || null);
+  }, [initialNotebook]);
+
 
 
   useEffect(() => {
@@ -46,7 +58,7 @@ export function NoteEditor({ initialNotebook }: Props) {
     }, 1000)
 
     return () => clearTimeout(timeout)
-  }, [title, note, questionBlocks, notebookId]) 
+  }, [title, note, questionBlocks, notebookId])
 
 
   return (

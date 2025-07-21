@@ -6,15 +6,17 @@ import { NoteEditor } from "@/components/note-editor"
 import { loadNotebooks, Notebook } from "@/lib/local-storage"
 
 export default function NotebookPage() {
+  // Get the notebook ID from the URL parameters
   const { id } = useParams()
   const [notebook, setNotebook] = useState<Notebook | null>(null)
 
+  
   useEffect(() => {
     if (id === "new") {
       setNotebook(null) // new note, no data loaded
     } else {
       const notebooks = loadNotebooks()
-      const found = notebooks.find((nb) => nb.id === id)
+      const found = notebooks.find((notebook) => notebook.id === id)
       setNotebook(found ?? null)
     }
   }, [id])

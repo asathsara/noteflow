@@ -26,7 +26,7 @@ const Tiptap = ({ note, setNote }: TipTapProps) => {
             Heading.configure({
                 levels: [1, 2, 3],
                 HTMLAttributes: {
-                    class: 'text-xl mb-2 text-gray-900 font-bold',
+                    class: 'text-xl mb-2 font-bold',
                 }
             })
         ],
