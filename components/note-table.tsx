@@ -1,3 +1,6 @@
+"use client"
+
+import { useEffect, useState } from "react"
 import {
   Table,
   TableBody,
@@ -8,12 +11,16 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Edit } from "lucide-react"
+import { loadNotebooks, Notebook } from "@/lib/local-storage"
+import Link from "next/link"
 
 export function NoteTable() {
-  const notes = [
-    { id: 1, title: "First Note", createdAt: "2025-07-16" },
-    { id: 2, title: "Meeting Summary", createdAt: "2025-07-15" },
-  ]
+  const [notes, setNotes] = useState<Notebook[]>([])
+
+  useEffect(() => {
+    const storedNotes = loadNotebooks()
+    setNotes(storedNotes)
+  }, [])
 
   if (notes.length === 0) {
     return <p className="text-center text-gray-500">No notes yet.</p>
@@ -32,11 +39,13 @@ export function NoteTable() {
         {notes.map((note) => (
           <TableRow key={note.id}>
             <TableCell>{note.title}</TableCell>
-            <TableCell>{note.createdAt}</TableCell>
+            <TableCell>{new Date(note.createdAt).toLocaleDateString()}</TableCell>
             <TableCell className="text-right">
               <Button variant="outline" size="sm">
-                <Edit className="w-4 h-4" />
-                Edit
+                <Link href={`/notebook/${note.id}`}>
+                  <Edit className="w-4 h-4 mr-1" />
+                  Edit
+                </Link>
               </Button>
             </TableCell>
           </TableRow>
