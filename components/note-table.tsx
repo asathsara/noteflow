@@ -37,9 +37,10 @@ export function NoteTable() {
       </TableHeader>
       <TableBody>
         {notes.map((note) => (
+          console.log("Rendering note:", note),
           <TableRow key={note.id}>
             <TableCell>{note.title}</TableCell>
-            <TableCell>{new Date(note.createdAt).toLocaleDateString()}</TableCell>
+            <TableCell>{note.createdAt}</TableCell>
             <TableCell className="text-right">
               <Button variant="outline" size="sm">
                 <Link href={`/notebook/${note.id}`}>

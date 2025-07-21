@@ -5,7 +5,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Input } from "@/components/ui/input"
 import { NoteTab } from "./note-tab"
 import { QuestionTab } from "./question-tab"
-import { addNotebook, loadNotebooks, Notebook, saveNotebooks } from "@/lib/local-storage"
+import { addNotebook,  Notebook,  updateNotebook } from "@/lib/local-storage"
 
 
 type Props = {
@@ -21,13 +21,6 @@ export function NoteEditor({ initialNotebook }: Props) {
 
   const [notebookId, setNotebookId] = useState(initialNotebook?.id || null)
 
-  const updateNotebook = (updated: Notebook) => {
-    const notebooks = loadNotebooks()
-    const next = notebooks.map(nb =>
-      nb.id === updated.id ? { ...updated, updatedAt: new Date().toISOString() } : nb
-    )
-    saveNotebooks(next)
-  }
 
   useEffect(() => {
     if (
@@ -44,7 +37,6 @@ export function NoteEditor({ initialNotebook }: Props) {
           title,
           note,
           questionBlocks,
-          createdAt: "", 
           updatedAt: ""
         })
       } else {
@@ -55,8 +47,6 @@ export function NoteEditor({ initialNotebook }: Props) {
 
     return () => clearTimeout(timeout)
   }, [title, note, questionBlocks, notebookId]) 
-
-
 
 
   return (
