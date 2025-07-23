@@ -1,6 +1,5 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import {
   Table,
   TableBody,
@@ -11,25 +10,14 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Edit, Trash } from "lucide-react"
-import { loadNotebooks, Notebook, saveNotebooks } from "@/lib/local-storage"
 import Link from "next/link"
 import { DeleteAlertDialog } from "./delete-dialog"
+import { useNotebooks } from "@/context/notes-context"
 
 export function NoteTable() {
-  const [notes, setNotes] = useState<Notebook[]>([])
+  const { notebooks, deleteById } = useNotebooks()
 
-  useEffect(() => {
-    const storedNotes = loadNotebooks()
-    setNotes(storedNotes)
-  }, [])
-
-  const handleDelete = (id: string) => {
-    const updatedNotes = notes.filter((note) => note.id !== id)
-    setNotes(updatedNotes)
-    saveNotebooks(updatedNotes)
-  }
-
-  if (notes.length === 0) {
+  if (notebooks.length === 0) {
     return <p className="text-center text-gray-500">No notes yet.</p>
   }
 
@@ -44,10 +32,10 @@ export function NoteTable() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {notes.map((note) => (
+          {notebooks.map((note) => (
             <TableRow key={note.id}>
               <TableCell className="align-middle">{note.title}</TableCell>
-              <TableCell className="align-middle text-gray-500">
+              <TableCell className="align-middle">
                 {note.createdAt}
               </TableCell>
               <TableCell className="align-middle">
@@ -63,20 +51,14 @@ export function NoteTable() {
                   </Button>
                   <DeleteAlertDialog
                     trigger={
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="text-destructive border-destructive hover:bg-destructive/10 cursor-pointer"
-                      >
-                        <div className="flex items-center gap-1">
-                          <Trash className="w-4 h-4" />
-                          <span>Delete</span>
-                        </div>
+                      <Button variant="outline" size="sm" className="text-destructive">
+                        <Trash className="w-4 h-4" />
+                        Delete
                       </Button>
                     }
                     title="Delete Note"
                     description="Are you sure you want to delete this note? This action cannot be undone."
-                    onConfirm={() => handleDelete(note.id)}
+                    onConfirm={() => deleteById(note.id)}
                   />
                 </div>
               </TableCell>

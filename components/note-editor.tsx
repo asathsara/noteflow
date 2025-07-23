@@ -1,38 +1,34 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Input } from "@/components/ui/input"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { NoteTab } from "./note-tab"
 import { QuestionTab } from "./question-tab"
-import { addNotebook, Notebook, updateNotebook } from "@/lib/local-storage"
-
+import { Notebook } from "@/lib/local-storage"
+import { useNotebooks } from "@/context/notes-context"
 
 type Props = {
   initialNotebook?: Notebook
 }
 
 export function NoteEditor({ initialNotebook }: Props) {
-
   const [title, setTitle] = useState(initialNotebook?.title || "")
   const [note, setNote] = useState(initialNotebook?.note || "")
   const [questionBlocks, setQuestionBlocks] = useState(
     initialNotebook?.questionBlocks || [{ question: "", answer: "" }]
   )
-
-
   const [notebookId, setNotebookId] = useState(initialNotebook?.id || null)
 
+  const { addNotebook, updateNotebook } = useNotebooks()
+
   useEffect(() => {
-    if (!initialNotebook) return;
-
-    setTitle(initialNotebook.title || "");
-    setNote(initialNotebook.note || "");
-    setQuestionBlocks(initialNotebook.questionBlocks || [{ question: "", answer: "" }]);
-    setNotebookId(initialNotebook.id || null);
-  }, [initialNotebook]);
-
-
+    if (!initialNotebook) return
+    setTitle(initialNotebook.title || "")
+    setNote(initialNotebook.note || "")
+    setQuestionBlocks(initialNotebook.questionBlocks || [{ question: "", answer: "" }])
+    setNotebookId(initialNotebook.id || null)
+  }, [initialNotebook])
 
   useEffect(() => {
     if (
@@ -40,7 +36,8 @@ export function NoteEditor({ initialNotebook }: Props) {
       !note.trim() &&
       questionBlocks.length === 1 &&
       !questionBlocks[0].question
-    ) return
+    )
+      return
 
     const timeout = setTimeout(() => {
       if (notebookId) {
@@ -49,7 +46,7 @@ export function NoteEditor({ initialNotebook }: Props) {
           title,
           note,
           questionBlocks,
-          updatedAt: ""
+          updatedAt: "",
         })
       } else {
         const saved = addNotebook({ title, note, questionBlocks })
@@ -58,8 +55,7 @@ export function NoteEditor({ initialNotebook }: Props) {
     }, 1000)
 
     return () => clearTimeout(timeout)
-  }, [title, note, questionBlocks, notebookId])
-
+  }, [title, note, questionBlocks, notebookId, addNotebook, updateNotebook])
 
   return (
     <div className="space-y-6">
@@ -81,10 +77,7 @@ export function NoteEditor({ initialNotebook }: Props) {
         </TabsContent>
 
         <TabsContent value="question">
-          <QuestionTab
-            questionBlocks={questionBlocks}
-            setQuestionBlocks={setQuestionBlocks}
-          />
+          <QuestionTab questionBlocks={questionBlocks} setQuestionBlocks={setQuestionBlocks} />
         </TabsContent>
       </Tabs>
     </div>
