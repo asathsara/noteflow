@@ -47,16 +47,22 @@ export function NotebookProvider({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener("focus", syncOnFocus)
   }, [])
 
-  const addNotebook = (
-    notebook: Omit<Notebook, "id" | "createdAt" | "updatedAt">
+
+  // Function to add a new notebook
+  const addNotebook = (notebook: Omit<Notebook, "id" | "createdAt" | "updatedAt">
   ): Notebook => {
+
+    
     const newNotebook: Notebook = {
       ...notebook,
       id: generateId(),
       createdAt: formatDate(new Date()),
       updatedAt: formatDate(new Date()),
     }
+
+    // Add the new notebook to the state and save it to local storage
     const updated = [...notebooks, newNotebook]
+
     setNotebooks(updated)
     saveNotebooks(updated)
     return newNotebook
