@@ -11,13 +11,12 @@ import {
   SidebarMenuButton,
   SidebarHeader,
 } from "@/components/ui/sidebar"
-import { PenTool, Settings, Trash2, User } from "lucide-react"
+import { PenTool, Settings, Trash2 } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 
 const menuItems = [
   { title: "Settings", icon: Settings, action: "settings" },
   { title: "Delete All", icon: Trash2, action: "delete", className: "text-destructive" },
-  { title: "User", icon: User, action: "user" },
 ]
 
 export function AppSidebar() {
@@ -28,9 +27,6 @@ export function AppSidebar() {
         break
       case "delete":
         console.log("Delete clicked")
-        break
-      case "user":
-        console.log("User clicked")
         break
       default:
         console.warn("Unknown action:", action)
