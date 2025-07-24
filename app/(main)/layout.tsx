@@ -9,6 +9,7 @@ import {
     SignedOut,
     UserButton,
 } from '@clerk/nextjs'
+import { Button } from "@/components/ui/button";
 
 export default function MainLayout({ children }: { children: ReactNode }) {
     return (
@@ -21,13 +22,14 @@ export default function MainLayout({ children }: { children: ReactNode }) {
 
                 <header className="flex justify-end items-center p-4 gap-4 h-16">
                     <SignedOut>
-                        <SignInButton />
+                        <SignInButton>
+                            <Button variant="outline">Sign In</Button>
+                        </SignInButton>
                         <SignUpButton>
-                            <button className="bg-[#6c47ff] text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer">
-                                Sign Up
-                            </button>
+                            <Button>Sign Up</Button>
                         </SignUpButton>
                     </SignedOut>
+
                     <SignedIn>
                         <UserButton />
                     </SignedIn>
