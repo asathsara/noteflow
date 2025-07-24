@@ -71,7 +71,7 @@ export function AskAIQuestionDialog({ onBlocksGenerated }: AskAIQuestionDialogPr
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Generate Questions with Gemini</DialogTitle>
+                    <DialogTitle>Generate Questions with AI</DialogTitle>
                 </DialogHeader>
 
                 <div className="space-y-3">

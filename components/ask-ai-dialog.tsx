@@ -53,7 +53,7 @@ export function AskAIDialog({ onAnswer }: AskAIDialogProps) {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Ask Gemini</DialogTitle>
+          <DialogTitle>Ask AI</DialogTitle>
         </DialogHeader>
         <Textarea
           placeholder="Type your question..."
