@@ -13,12 +13,13 @@ import { Edit, Trash } from "lucide-react"
 import Link from "next/link"
 import { DeleteAlertDialog } from "./delete-dialog"
 import { useNotebooks } from "@/context/notebook-context"
+import { NoNotebooks } from "./no-notebooks"
 
 export function NoteTable() {
   const { notebooks, deleteById } = useNotebooks()
 
   if (notebooks.length === 0) {
-    return <p className="text-center text-gray-500">No notes yet.</p>
+    return <NoNotebooks />
   }
 
   return (

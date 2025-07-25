@@ -10,7 +10,7 @@ import {
   SidebarMenuItem,
   SidebarHeader,
 } from "@/components/ui/sidebar"
-import { PenTool,  Trash } from "lucide-react"
+import { PenTool, Trash } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { DeleteAlertDialog } from "./delete-dialog"
 import { Button } from "./ui/button"
@@ -20,7 +20,7 @@ import { useNotebooks } from "@/context/notebook-context"
 
 
 export function AppSidebar() {
-  
+
   const { deleteAll } = useNotebooks()
 
   return (
@@ -37,10 +37,6 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              
-                
-             
-
               <SidebarMenuItem>
                 <DeleteAlertDialog
                   trigger={
