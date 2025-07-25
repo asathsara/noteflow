@@ -1,6 +1,6 @@
 "use client"
 
-import {  useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Input } from "@/components/ui/input"
 import { NoteTab } from "./note-tab"
@@ -8,6 +8,7 @@ import { QuestionTab } from "./question-tab"
 import { Notebook } from "@/types/notebook"
 import { useNotebooks } from "@/context/notebook-context"
 import { useDebouncedEffect } from "@/hooks/use-debounce"
+import { isEditorContentEmpty } from "@/lib/utils"
 
 type Props = {
   initialNotebook?: Notebook
@@ -16,7 +17,7 @@ type Props = {
 export function NoteEditor({ initialNotebook }: Props) {
   const [title, setTitle] = useState("")
   const [note, setNote] = useState("")
-  const [questionBlocks, setQuestionBlocks] = useState( [{ question: "", answer: "" }]
+  const [questionBlocks, setQuestionBlocks] = useState([{ question: "", answer: "" }]
   )
   const [notebookId, setNotebookId] = useState(initialNotebook?.id || null)
 
@@ -32,16 +33,14 @@ export function NoteEditor({ initialNotebook }: Props) {
 
   useDebouncedEffect(() => {
 
-    
-    if (
-      !title.trim() &&
-      !note == "<p></p>" &&
-      ((questionBlocks.length === 1 &&
-      !questionBlocks[0].question &&
-      !questionBlocks[0].answer) || questionBlocks.length === 0)
-      
-      
-    ) return;
+    const isNoteEmpty = isEditorContentEmpty(note);
+    const isQuestionBlocksEmpty =
+      (questionBlocks.length === 1 &&
+        !questionBlocks[0].question.trim() &&
+        !questionBlocks[0].answer.trim()) ||
+      questionBlocks.length === 0;
+
+    if (!title.trim() && isNoteEmpty && isQuestionBlocksEmpty) return;
 
     (async () => {
       if (notebookId) {
