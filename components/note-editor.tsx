@@ -56,7 +56,7 @@ export function NoteEditor({ initialNotebook }: Props) {
         setNotebookId(saved.id);
       }
     })();
-  }, [title, note, questionBlocks, notebookId], 1000);
+  }, [title, note, questionBlocks, notebookId], 500);
 
 
   return (

@@ -1,3 +1,5 @@
+"use client";
+
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { ReactNode } from "react";
@@ -10,11 +12,13 @@ import {
     UserButton,
 } from '@clerk/nextjs'
 import { Button } from "@/components/ui/button";
+import { useTheme } from "next-themes";
+import { dark } from "@clerk/themes";
 
 export default function MainLayout({ children }: { children: ReactNode }) {
+
+     const { resolvedTheme } = useTheme();
     return (
-
-
         <SidebarProvider>
             <AppSidebar />
 
@@ -31,7 +35,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
                     </SignedOut>
 
                     <SignedIn>
-                        <UserButton />
+                        <UserButton  appearance={{baseTheme: resolvedTheme === "dark" ? dark : undefined}}/>
                     </SignedIn>
                 </header>
                 <SidebarTrigger />

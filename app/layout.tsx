@@ -18,11 +18,11 @@ export const metadata: Metadata = {
   description: "Where ideas and AI flow together",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
+export default function RootLayout({ children, }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+
   return (
 
     <ClerkProvider>
