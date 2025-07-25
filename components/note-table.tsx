@@ -14,9 +14,14 @@ import Link from "next/link"
 import { DeleteAlertDialog } from "./delete-dialog"
 import { useNotebooks } from "@/context/notebook-context"
 import { NoNotebooks } from "./no-notebooks"
+import { LoadingTable } from "./loading-table"
 
 export function NoteTable() {
-  const { notebooks, deleteById } = useNotebooks()
+  const { notebooks, deleteById, loading } = useNotebooks()
+
+  if (loading) {
+    return <LoadingTable />
+  }
 
   if (notebooks.length === 0) {
     return <NoNotebooks />

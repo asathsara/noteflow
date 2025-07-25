@@ -22,12 +22,18 @@ const getNotebooks = async (): Promise<Notebook[]> => {
 
 export function NotebookProvider({ children }: { children: React.ReactNode }) {
   const [notebooks, setNotebooks] = useState<Notebook[]>([])
+  const [loading, setLoading] = useState<boolean>(false)
 
   // Function to refresh the notebooks list
   // useCallback is used to memoize the function so it doesn't change on every render
   const refresh = useCallback(async () => {
-    const data = await getNotebooks();
-    setNotebooks(data);
+    setLoading(true)
+    try {
+      const data = await getNotebooks();
+      setNotebooks(data);
+    } finally {
+      setLoading(false)
+    }
   }, []);
 
 
@@ -97,7 +103,7 @@ export function NotebookProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <NotebookContext.Provider value={{ notebooks, refresh, addNotebook, updateNotebook, deleteById , deleteAll }}>
+    <NotebookContext.Provider value={{ notebooks, loading, refresh, addNotebook, updateNotebook, deleteById, deleteAll }}>
       {children}
     </NotebookContext.Provider>
   )

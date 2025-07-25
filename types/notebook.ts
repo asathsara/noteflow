@@ -18,8 +18,9 @@ export type Notebook = {
 // Context type for NotebookProvider
 export type NotebookContextType = {
   notebooks: Notebook[];
-  refresh: () => void;
-  addNotebook: (data: Omit<Notebook, "id" | "createdAt" | "updatedAt">) => Promise<Notebook>;
+  loading: boolean;
+  refresh: () => Promise<void>;
+  addNotebook: (notebook: Omit<Notebook, "id" | "createdAt" | "updatedAt">) => Promise<Notebook>;
   updateNotebook: (notebook: Notebook) => Promise<void>;
   deleteById: (id: string) => Promise<void>;
   deleteAll: () => Promise<void>;
