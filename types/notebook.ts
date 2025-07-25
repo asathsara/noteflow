@@ -12,14 +12,14 @@ export type Notebook = {
   note: string
   questionBlocks: QuestionBlock[]
   createdAt?: string
-  updatedAt: string
+  updatedAt?: string
 }
 
 // Context type for NotebookProvider
 export type NotebookContextType = {
   notebooks: Notebook[];
   refresh: () => void;
-  addNotebook: (data: Omit<Notebook, "id" | "createdAt" | "updatedAt">) => Promise<void>;
+  addNotebook: (data: Omit<Notebook, "id" | "createdAt" | "updatedAt">) => Promise<Notebook>;
   updateNotebook: (notebook: Notebook) => Promise<void>;
   deleteById: (id: string) => Promise<void>;
 };

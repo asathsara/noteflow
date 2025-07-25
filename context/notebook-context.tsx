@@ -15,10 +15,10 @@ export const useNotebooks = () => {
 
 // Function to fetch notebooks from the API
 const getNotebooks = async (): Promise<Notebook[]> => {
-    const res = await fetch("/api/notebooks");
-    if (!res.ok) throw new Error("Failed to fetch notebooks");
-    return res.json();
-  };
+  const res = await fetch("/api/notebooks");
+  if (!res.ok) throw new Error("Failed to fetch notebooks");
+  return res.json();
+};
 
 export function NotebookProvider({ children }: { children: React.ReactNode }) {
   const [notebooks, setNotebooks] = useState<Notebook[]>([])
@@ -28,7 +28,7 @@ export function NotebookProvider({ children }: { children: React.ReactNode }) {
   const refresh = useCallback(async () => {
     const data = await getNotebooks();
     setNotebooks(data);
-  },[]);
+  }, []);
 
 
   useEffect(() => {
@@ -42,28 +42,47 @@ export function NotebookProvider({ children }: { children: React.ReactNode }) {
 
 
   // Function to add a new notebook without id, createdAt, and updatedAt fields
-  const addNotebook = async (notebook: Omit<Notebook, "id" | "createdAt" | "updatedAt">) => {
-    await fetch("/api/notebooks", {
+  const addNotebook = async (notebook: Omit<Notebook, "id" | "createdAt" | "updatedAt">): Promise<Notebook> => {
+
+    const res = await fetch("/api/notebooks", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(notebook),
-    })
-    refresh()
+    });
+
+    if (!res.ok) throw new Error("Failed to add notebook");
+
+    const data: Notebook = await res.json();
+    refresh();
+    return data;
   }
 
   // Function to update an existing notebook
   const updateNotebook = async (notebook: Notebook) => {
-    await fetch(`/api/notebooks/${notebook.id}`, {
+    const res = await fetch(`/api/notebooks/${notebook.id}`, {
       method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(notebook),
-    })
-    refresh()
-  }
+    });
+    if (!res.ok) throw new Error("Failed to update notebook");
+    refresh();
+  };
 
   // Function to delete a notebook by its ID
   const deleteById = async (id: string) => {
-    await fetch(`/api/notebooks/${id}`, { method: "DELETE" })
-    refresh()
-  }
+    const res = await fetch(`/api/notebooks/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!res.ok) throw new Error("Failed to delete notebook");
+    refresh();
+  };
 
   return (
     <NotebookContext.Provider value={{ notebooks, refresh, addNotebook, updateNotebook, deleteById }}>

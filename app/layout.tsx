@@ -6,6 +6,7 @@ import "./globals.css";
 import {
   ClerkProvider,
 } from '@clerk/nextjs'
+import { NotebookProvider } from "@/context/notebook-context";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -27,17 +28,14 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <body
-          className={inter.className}
-        >
+          className={inter.className}>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange>
-
-
-
-            {children}</ThemeProvider>
+            <NotebookProvider>{children}</NotebookProvider>
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>
