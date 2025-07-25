@@ -22,5 +22,6 @@ export type NotebookContextType = {
   addNotebook: (data: Omit<Notebook, "id" | "createdAt" | "updatedAt">) => Promise<Notebook>;
   updateNotebook: (notebook: Notebook) => Promise<void>;
   deleteById: (id: string) => Promise<void>;
+  deleteAll: () => Promise<void>;
 };
 

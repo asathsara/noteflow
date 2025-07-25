@@ -84,8 +84,20 @@ export function NotebookProvider({ children }: { children: React.ReactNode }) {
     refresh();
   };
 
+  // Function to delete all notebooks
+  const deleteAll = async () => {
+    const res = await fetch("/api/notebooks", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!res.ok) throw new Error("Failed to delete all notebooks");
+    refresh();
+  }
+
   return (
-    <NotebookContext.Provider value={{ notebooks, refresh, addNotebook, updateNotebook, deleteById }}>
+    <NotebookContext.Provider value={{ notebooks, refresh, addNotebook, updateNotebook, deleteById , deleteAll }}>
       {children}
     </NotebookContext.Provider>
   )

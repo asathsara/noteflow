@@ -40,3 +40,17 @@ export async function GET() {
 
   return Response.json(result);
 }
+
+// Function to delete all notebooks for the authenticated user
+export async function DELETE() {
+  // Ensure the user is authenticated
+  const { userId } = await auth();
+  if (!userId) return new Response("Unauthorized", { status: 401 });
+
+  const result = await db
+    .delete(notebooks)
+    .where(eq(notebooks.userId, userId))
+    .returning();
+
+  return Response.json(result);
+}
