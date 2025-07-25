@@ -1,22 +1,22 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import {  useEffect, useState } from "react"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Input } from "@/components/ui/input"
 import { NoteTab } from "./note-tab"
 import { QuestionTab } from "./question-tab"
 import { Notebook } from "@/types/notebook"
 import { useNotebooks } from "@/context/notebook-context"
+import { useDebouncedEffect } from "@/hooks/use-debounce"
 
 type Props = {
   initialNotebook?: Notebook
 }
 
 export function NoteEditor({ initialNotebook }: Props) {
-  const [title, setTitle] = useState(initialNotebook?.title || "")
-  const [note, setNote] = useState(initialNotebook?.note || "")
-  const [questionBlocks, setQuestionBlocks] = useState(
-    initialNotebook?.questionBlocks || [{ question: "", answer: "" }]
+  const [title, setTitle] = useState("")
+  const [note, setNote] = useState("")
+  const [questionBlocks, setQuestionBlocks] = useState( [{ question: "", answer: "" }]
   )
   const [notebookId, setNotebookId] = useState(initialNotebook?.id || null)
 
@@ -30,31 +30,34 @@ export function NoteEditor({ initialNotebook }: Props) {
     setNotebookId(initialNotebook.id || null)
   }, [initialNotebook])
 
-  useEffect(() => {
+  useDebouncedEffect(() => {
+
+    
     if (
       !title.trim() &&
-      !note.trim() &&
-      questionBlocks.length === 1 &&
-      !questionBlocks[0].question
-    )
-      return
+      !note == "<p></p>" &&
+      ((questionBlocks.length === 1 &&
+      !questionBlocks[0].question &&
+      !questionBlocks[0].answer) || questionBlocks.length === 0)
+      
+      
+    ) return;
 
-    const timeout = setTimeout(async () => {
+    (async () => {
       if (notebookId) {
-        updateNotebook({
+        await updateNotebook({
           id: notebookId,
           title,
           note,
           questionBlocks,
-        })
+          updatedAt: "",
+        });
       } else {
-        const saved = await addNotebook({ title, note, questionBlocks })
-        setNotebookId(saved.id)
+        const saved = await addNotebook({ title, note, questionBlocks });
+        setNotebookId(saved.id);
       }
-    }, 1000)
-
-    return () => clearTimeout(timeout)
-  }, [title, note, questionBlocks, notebookId, addNotebook, updateNotebook])
+    })();
+  }, [title, note, questionBlocks, notebookId], 1000);
 
 
   return (
@@ -73,7 +76,7 @@ export function NoteEditor({ initialNotebook }: Props) {
         </TabsList>
 
         <TabsContent value="write">
-          <NoteTab note={note} setNote={setNote}  />
+          <NoteTab note={note} setNote={setNote} />
         </TabsContent>
 
         <TabsContent value="question">
