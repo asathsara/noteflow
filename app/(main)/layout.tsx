@@ -15,8 +15,6 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
 import { dark } from "@clerk/themes";
 
-
-
 export default function MainLayout({ children }: { children: ReactNode }) {
     
     const { resolvedTheme } = useTheme();
@@ -29,10 +27,10 @@ export default function MainLayout({ children }: { children: ReactNode }) {
                 <header className="flex justify-end items-center p-4 gap-4 h-16">
                     <SignedOut>
                         <SignInButton>
-                            <Button variant="outline">Sign In</Button>
+                            <Button variant="outline" className="cursor-pointer">Sign In</Button>
                         </SignInButton>
                         <SignUpButton>
-                            <Button>Sign Up</Button>
+                            <Button className="cursor-pointer">Sign Up</Button>
                         </SignUpButton>
                     </SignedOut>
 
