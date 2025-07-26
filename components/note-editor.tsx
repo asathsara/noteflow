@@ -8,6 +8,7 @@ import { QuestionTab } from "./question-tab"
 import { Notebook } from "@/lib/local-storage"
 import { useNotebooks } from "@/context/notes-context"
 import { isEditorContentEmpty } from "@/lib/utils"
+import { useDebouncedEffect } from "@/hooks/use-debounce"
 
 type Props = {
   initialNotebook?: Notebook
@@ -31,8 +32,8 @@ export function NoteEditor({ initialNotebook }: Props) {
     setNotebookId(initialNotebook.id || null)
   }, [initialNotebook])
 
-  useEffect(() => {
-    
+  useDebouncedEffect(() => {
+
     const isNoteEmpty = isEditorContentEmpty(note);
     const isQuestionBlocksEmpty =
       (questionBlocks.length === 1 &&
@@ -42,23 +43,21 @@ export function NoteEditor({ initialNotebook }: Props) {
 
     if (!title.trim() && isNoteEmpty && isQuestionBlocksEmpty) return;
 
-    const timeout = setTimeout(() => {
+    (async () => {
       if (notebookId) {
-        updateNotebook({
+        await updateNotebook({
           id: notebookId,
           title,
           note,
           questionBlocks,
           updatedAt: "",
-        })
+        });
       } else {
-        const saved = addNotebook({ title, note, questionBlocks })
-        setNotebookId(saved.id)
+        const saved = await addNotebook({ title, note, questionBlocks });
+        setNotebookId(saved.id);
       }
-    }, 1000)
-
-    return () => clearTimeout(timeout)
-  }, [title, note, questionBlocks, notebookId, addNotebook, updateNotebook])
+    })();
+  }, [title, note, questionBlocks, notebookId], 500);
 
   return (
     <div className="space-y-6">
