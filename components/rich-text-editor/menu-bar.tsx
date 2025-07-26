@@ -17,7 +17,7 @@ export default function MenuBar({ editor }: { editor: Editor | null }) {
   if (!editor) return null;
 
   return (
-    <div className="flex flex-wrap gap-2 border border-input bg-transparent rounded-md p-2 mb-2 z-50">
+    <div className="flex flex-wrap gap-2 border border-input bg-transparent rounded-md p-2 my-2 z-50">
       <Toggle
         size="sm"
         pressed={editor.isActive("heading", { level: 1 })}
