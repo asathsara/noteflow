@@ -3,13 +3,15 @@ import { db } from "@/db";
 import { notebooks } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+type Params = Promise<{id: string}>;
+
+export async function PUT(req: Request, { params }: { params: Params}) {
   // Ensure the user is authenticated
   const { userId } = await auth();
   if (!userId) return new Response("Unauthorized", { status: 401 });
 
   // get the notebook ID from the request parameters
-  const id = Number(params.id);
+  const { id } = await params;
   const body = await req.json();
 
   const result = await db
@@ -20,7 +22,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
       questionBlocks: JSON.stringify(body.questionBlocks),
       updatedAt: new Date(),
     })
-    .where(and(eq(notebooks.id, id), eq(notebooks.userId, userId))) 
+    .where(and(eq(notebooks.id, Number(id)), eq(notebooks.userId, userId))) 
     .returning();
 
   // Check if the notebook was found and updated
@@ -30,18 +32,18 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   return Response.json(result[0]);
 }
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: Request, { params }: { params: Params }) {
 
   // Ensure the user is authenticated
   const { userId } = await auth();
   if (!userId) return new Response("Unauthorized", { status: 401 });
 
   // get the notebook ID from the request parameters
-  const id = Number(params.id);
+  const { id } = await params;
 
   const result = await db
     .delete(notebooks)
-    .where(and(eq(notebooks.id, id), eq(notebooks.userId, userId)))
+    .where(and(eq(notebooks.id, Number(id)), eq(notebooks.userId, userId)))
     .returning();
 
   if (!result.length) return new Response("Not Found or Unauthorized", { status: 404 });
