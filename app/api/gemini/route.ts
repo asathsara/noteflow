@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Question is required" }, { status: 400 })
     }
 
-    // ✅ your generateText usage — perfectly fine here
+    // Call Gemini API to get the answer
     const { text } = await generateText({
       model: google("models/gemini-1.5-flash-latest"),
       prompt: question,

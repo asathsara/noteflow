@@ -1,15 +1,63 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Input } from "@/components/ui/input"
 import { NoteTab } from "./note-tab"
 import { QuestionTab } from "./question-tab"
+import { Notebook } from "@/types/notebook"
+import { useNotebooks } from "@/context/notebook-context"
+import { useDebouncedEffect } from "@/hooks/use-debounce"
+import { isEditorContentEmpty } from "@/lib/utils"
 
-export function NoteEditor() {
+type Props = {
+  initialNotebook?: Notebook
+}
+
+export function NoteEditor({ initialNotebook }: Props) {
   const [title, setTitle] = useState("")
   const [note, setNote] = useState("")
-  const [questionBlocks, setQuestionBlocks] = useState([{ question: "", answer: "" }])
+  const [questionBlocks, setQuestionBlocks] = useState([{ question: "", answer: "" }]
+  )
+  const [notebookId, setNotebookId] = useState(initialNotebook?.id || null)
+
+  const { addNotebook, updateNotebook } = useNotebooks()
+
+  useEffect(() => {
+    if (!initialNotebook) return
+    setTitle(initialNotebook.title || "")
+    setNote(initialNotebook.note || "")
+    setQuestionBlocks(initialNotebook.questionBlocks || [{ question: "", answer: "" }])
+    setNotebookId(initialNotebook.id || null)
+  }, [initialNotebook])
+
+  useDebouncedEffect(() => {
+
+    const isNoteEmpty = isEditorContentEmpty(note);
+    const isQuestionBlocksEmpty =
+      (questionBlocks.length === 1 &&
+        !questionBlocks[0].question.trim() &&
+        !questionBlocks[0].answer.trim()) ||
+      questionBlocks.length === 0;
+
+    if (!title.trim() && isNoteEmpty && isQuestionBlocksEmpty) return;
+
+    (async () => {
+      if (notebookId) {
+        await updateNotebook({
+          id: notebookId,
+          title,
+          note,
+          questionBlocks,
+          updatedAt: "",
+        });
+      } else {
+        const saved = await addNotebook({ title, note, questionBlocks });
+        setNotebookId(saved.id);
+      }
+    })();
+  }, [title, note, questionBlocks, notebookId], 500);
+
 
   return (
     <div className="space-y-6">
@@ -27,7 +75,7 @@ export function NoteEditor() {
         </TabsList>
 
         <TabsContent value="write">
-          <NoteTab note={note} setNote={setNote}  />
+          <NoteTab note={note} setNote={setNote} />
         </TabsContent>
 
         <TabsContent value="question">
