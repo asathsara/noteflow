@@ -14,6 +14,7 @@ import Link from "next/link"
 import { DeleteAlertDialog } from "./delete-dialog"
 import { useNotebooks } from "@/context/notes-context"
 import { LoadingTable } from "./loading-table"
+import { NoNotebooks } from "./no-notebook"
 
 export function NoteTable() {
   const { notebooks, deleteById, loading } = useNotebooks()
@@ -24,7 +25,7 @@ export function NoteTable() {
   }
 
   if (notebooks.length === 0) {
-    return <p className="text-center text-gray-500">No notes yet.</p>
+    return <NoNotebooks />
   }
 
   return (
