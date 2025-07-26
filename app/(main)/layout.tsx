@@ -15,9 +15,11 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
 import { dark } from "@clerk/themes";
 
-export default function MainLayout({ children }: { children: ReactNode }) {
 
-     const { resolvedTheme } = useTheme();
+
+export default function MainLayout({ children }: { children: ReactNode }) {
+    
+    const { resolvedTheme } = useTheme();
     return (
         <SidebarProvider>
             <AppSidebar />
@@ -35,10 +37,11 @@ export default function MainLayout({ children }: { children: ReactNode }) {
                     </SignedOut>
 
                     <SignedIn>
-                        <UserButton  appearance={{baseTheme: resolvedTheme === "dark" ? dark : undefined}}/>
+                        <UserButton appearance={{ baseTheme: resolvedTheme === "dark" ? dark : undefined }}  />
                     </SignedIn>
                 </header>
                 <SidebarTrigger />
+
 
                 {children}
             </main>
