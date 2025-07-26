@@ -9,6 +9,9 @@ import { Notebook } from "@/types/notebook"
 import { useNotebooks } from "@/context/notebook-context"
 import { useDebouncedEffect } from "@/hooks/use-debounce"
 import { isEditorContentEmpty } from "@/lib/utils"
+  import { useRef } from "react";
+
+
 
 type Props = {
   initialNotebook?: Notebook
@@ -22,6 +25,7 @@ export function NoteEditor({ initialNotebook }: Props) {
   const [notebookId, setNotebookId] = useState(initialNotebook?.id || null)
 
   const { addNotebook, updateNotebook } = useNotebooks()
+  const isSavingRef = useRef(false);
 
   useEffect(() => {
     if (!initialNotebook) return
@@ -31,32 +35,40 @@ export function NoteEditor({ initialNotebook }: Props) {
     setNotebookId(initialNotebook.id || null)
   }, [initialNotebook])
 
-  useDebouncedEffect(() => {
 
-    const isNoteEmpty = isEditorContentEmpty(note);
-    const isQuestionBlocksEmpty =
-      (questionBlocks.length === 1 &&
-        !questionBlocks[0].question.trim() &&
-        !questionBlocks[0].answer.trim()) ||
-      questionBlocks.length === 0;
 
-    if (!title.trim() && isNoteEmpty && isQuestionBlocksEmpty) return;
+useDebouncedEffect(() => {
+  const isNoteEmpty = isEditorContentEmpty(note);
+  const isQuestionBlocksEmpty =
+    (questionBlocks.length === 1 &&
+      !questionBlocks[0].question.trim() &&
+      !questionBlocks[0].answer.trim()) ||
+    questionBlocks.length === 0;
 
-    (async () => {
-      if (notebookId) {
-        await updateNotebook({
-          id: notebookId,
-          title,
-          note,
-          questionBlocks,
-          updatedAt: "",
-        });
-      } else {
-        const saved = await addNotebook({ title, note, questionBlocks });
-        setNotebookId(saved.id);
-      }
-    })();
-  }, [title, note, questionBlocks, notebookId], 500);
+  if (!title.trim() && isNoteEmpty && isQuestionBlocksEmpty) return;
+
+  if (isSavingRef.current) return; // prevent double trigger
+
+  isSavingRef.current = true;
+
+  (async () => {
+    if (notebookId) {
+      await updateNotebook({
+        id: notebookId,
+        title,
+        note,
+        questionBlocks,
+        updatedAt: "",
+      });
+    } else {
+      const saved = await addNotebook({ title, note, questionBlocks });
+      setNotebookId(saved.id);
+    }
+
+    isSavingRef.current = false;
+  })();
+}, [title, note, questionBlocks, notebookId], 500);
+
 
 
   return (
