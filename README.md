@@ -106,3 +106,21 @@ types/              # TypeScript types
 - `POST /api/gemini`: Ask AI questions (Google Gemini)
 - `GET/PUT/DELETE /api/notebooks/[id]`: Manage notebooks
 
+## Screenshots
+
+Here are some screenshots showcasing NoteFlow's UI and features:
+
+### Home Page
+![Home Page](./screenshots/home.png)
+
+### Notebooks List
+![Notebooks](./screenshots/notebooks.png)
+
+### Note Editor
+![Note Editor](./screenshots/note.png)
+
+### AI Question Block
+![AI Question](./screenshots/question.png)
+
+### Light Theme Note Editor
+![Light Theme Note](./screenshots/light_note.png)
