@@ -16,7 +16,7 @@ import { ThemeToggle } from "@/components/theme-toggle"
 
 const menuItems = [
   { title: "Settings", icon: Settings, action: "settings" },
-  { title: "User", icon: User, action: "user" },
+  { title: "Guest", icon: User, action: "user" },
 ]
 
 import { DeleteAlertDialog } from "./delete-dialog"

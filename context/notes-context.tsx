@@ -14,6 +14,7 @@ type NotebookContextType = {
   updateNotebook: (notebook: Notebook) => void
   deleteById: (id: string) => void
   deleteAll: () => void
+  loading: boolean // <-- Add loading to context type
 }
 
 const NotebookContext = createContext<NotebookContextType | null>(null)
@@ -35,13 +36,18 @@ const formatDate = (date: Date) =>
 
 export function NotebookProvider({ children }: { children: React.ReactNode }) {
   const [notebooks, setNotebooks] = useState<Notebook[]>([])
+  const [loading, setLoading] = useState(true) // <-- Add loading state
 
   useEffect(() => {
+    setLoading(true)
     setNotebooks(loadNotebooks())
+    setLoading(false)
 
     // sync when window regains focus
     const syncOnFocus = () => {
+      setLoading(true)
       setNotebooks(loadNotebooks())
+      setLoading(false)
     }
     window.addEventListener("focus", syncOnFocus)
     return () => window.removeEventListener("focus", syncOnFocus)
@@ -52,7 +58,7 @@ export function NotebookProvider({ children }: { children: React.ReactNode }) {
   const addNotebook = (notebook: Omit<Notebook, "id" | "createdAt" | "updatedAt">
   ): Notebook => {
 
-    
+
     const newNotebook: Notebook = {
       ...notebook,
       id: generateId(),
@@ -72,10 +78,10 @@ export function NotebookProvider({ children }: { children: React.ReactNode }) {
     const updatedList = notebooks.map((n) =>
       n.id === updated.id
         ? {
-            ...updated,
-            createdAt: n.createdAt,
-            updatedAt: formatDate(new Date()),
-          }
+          ...updated,
+          createdAt: n.createdAt,
+          updatedAt: formatDate(new Date()),
+        }
         : n
     )
     setNotebooks(updatedList)
@@ -95,7 +101,7 @@ export function NotebookProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <NotebookContext.Provider
-      value={{ notebooks, addNotebook, updateNotebook, deleteById, deleteAll }}
+      value={{ notebooks, addNotebook, updateNotebook, deleteById, deleteAll, loading }} 
     >
       {children}
     </NotebookContext.Provider>

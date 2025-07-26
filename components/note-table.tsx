@@ -13,9 +13,15 @@ import { Edit, Trash } from "lucide-react"
 import Link from "next/link"
 import { DeleteAlertDialog } from "./delete-dialog"
 import { useNotebooks } from "@/context/notes-context"
+import { LoadingTable } from "./loading-table"
 
 export function NoteTable() {
-  const { notebooks, deleteById } = useNotebooks()
+  const { notebooks, deleteById, loading } = useNotebooks()
+
+  // If loading is true, show a loading state
+  if (loading) {
+    return <LoadingTable />
+  }
 
   if (notebooks.length === 0) {
     return <p className="text-center text-gray-500">No notes yet.</p>
