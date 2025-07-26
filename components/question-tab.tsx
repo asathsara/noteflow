@@ -2,7 +2,8 @@
 
 import { Button } from "@/components/ui/button"
 import { QuestionBlock } from "./question-block"
-import { AskAIQuestionDialog } from "./ask-ai-question-dialog" 
+import { AskAIQuestionDialog } from "./ask-ai-question-dialog"
+import { AnimatePresence, motion } from "motion/react"
 
 interface QuestionBlock {
   question: string
@@ -38,17 +39,27 @@ export function QuestionTab({
     setQuestionBlocks(updated)
   }
 
+
   return (
     <>
-      {questionBlocks.map((block, i) => (
-        <QuestionBlock
-          key={i}
-          question={block.question}
-          answer={block.answer}
-          onChange={(field, value) => handleQuestionBlock(i, field, value)}
-          onDelete={() => deleteQuestionBlock(i)}
-        />
-      ))}
+      <AnimatePresence>
+        {questionBlocks.map((block, i) => (
+          <motion.div
+            key={i} 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            layout
+          >
+            <QuestionBlock
+              question={block.question}
+              answer={block.answer}
+              onChange={(field, value) => handleQuestionBlock(i, field, value)}
+              onDelete={() => deleteQuestionBlock(i)}
+            />
+          </motion.div>
+        ))}
+      </AnimatePresence>
 
       <div className="flex gap-2 mt-2">
         <Button variant="outline" onClick={addQuestionBlock}>
