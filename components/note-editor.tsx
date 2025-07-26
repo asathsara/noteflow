@@ -7,6 +7,7 @@ import { NoteTab } from "./note-tab"
 import { QuestionTab } from "./question-tab"
 import { Notebook } from "@/lib/local-storage"
 import { useNotebooks } from "@/context/notes-context"
+import { isEditorContentEmpty } from "@/lib/utils"
 
 type Props = {
   initialNotebook?: Notebook
@@ -31,13 +32,15 @@ export function NoteEditor({ initialNotebook }: Props) {
   }, [initialNotebook])
 
   useEffect(() => {
-    if (
-      !title.trim() &&
-      !note.trim() &&
-      questionBlocks.length === 1 &&
-      !questionBlocks[0].question
-    )
-      return
+    
+    const isNoteEmpty = isEditorContentEmpty(note);
+    const isQuestionBlocksEmpty =
+      (questionBlocks.length === 1 &&
+        !questionBlocks[0].question.trim() &&
+        !questionBlocks[0].answer.trim()) ||
+      questionBlocks.length === 0;
+
+    if (!title.trim() && isNoteEmpty && isQuestionBlocksEmpty) return;
 
     const timeout = setTimeout(() => {
       if (notebookId) {
