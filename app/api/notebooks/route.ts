@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { db } from "@/db";
 import { notebooks } from "@/db/schema";
-import { eq } from "drizzle-orm"; 
+import { desc, eq } from "drizzle-orm"; 
 
 export async function POST(req: Request) {
 
@@ -36,7 +36,8 @@ export async function GET() {
   const result = await db
     .select()
     .from(notebooks)
-    .where(eq(notebooks.userId, userId));
+    .where(eq(notebooks.userId, userId))
+    .orderBy(desc(notebooks.updatedAt));
 
   return Response.json(result);
 }
