@@ -96,11 +96,6 @@ export function NotebookProvider({ children }: { children: React.ReactNode }) {
     });
 
     if (!res.ok) throw new Error("Failed to update notebook");
-
-    setNotebooks(prev =>
-      prev.map(item => (
-        (item.id == notebook.id ? notebook : item) 
-    )))
     
   };
 
