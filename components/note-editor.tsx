@@ -9,7 +9,7 @@ import { Notebook } from "@/types/notebook"
 import { useNotebooks } from "@/context/notebook-context"
 import { useDebouncedEffect } from "@/hooks/use-debounce"
 import { isEditorContentEmpty } from "@/lib/utils"
-  import { useRef } from "react";
+import { useRef } from "react";
 
 
 
@@ -23,6 +23,7 @@ export function NoteEditor({ initialNotebook }: Props) {
   const [questionBlocks, setQuestionBlocks] = useState([{ question: "", answer: "" }]
   )
   const [notebookId, setNotebookId] = useState(initialNotebook?.id || null)
+  const [createdAt, setCreatedAt] = useState("")
 
   const { addNotebook, updateNotebook } = useNotebooks()
   const isSavingRef = useRef(false);
@@ -33,6 +34,7 @@ export function NoteEditor({ initialNotebook }: Props) {
     setNote(initialNotebook.note || "")
     setQuestionBlocks(initialNotebook.questionBlocks || [{ question: "", answer: "" }])
     setNotebookId(initialNotebook.id || null)
+    setCreatedAt(initialNotebook.createdAt || "")
   }, [initialNotebook])
 
 
@@ -59,10 +61,12 @@ useDebouncedEffect(() => {
         note,
         questionBlocks,
         updatedAt: "",
+        createdAt
       });
     } else {
-      const saved = await addNotebook({ title, note, questionBlocks });
+      const saved = await addNotebook({ title, note, questionBlocks  });
       setNotebookId(saved.id);
+      setCreatedAt(saved.createdAt || "")
     }
 
     isSavingRef.current = false;
