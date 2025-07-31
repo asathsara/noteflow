@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Input } from "@/components/ui/input"
 import { NoteTab } from "./note-tab"
@@ -10,7 +10,6 @@ import { useNotebooks } from "@/context/notebook-context"
 import { useDebouncedEffect } from "@/hooks/use-debounce"
 import { isEditorContentEmpty } from "@/lib/utils"
 import { useRef } from "react";
-
 
 
 type Props = {
@@ -39,21 +38,19 @@ export function NoteEditor({ initialNotebook }: Props) {
 
 
 
-useDebouncedEffect(() => {
-  const isNoteEmpty = isEditorContentEmpty(note);
-  const isQuestionBlocksEmpty =
-    (questionBlocks.length === 1 &&
-      !questionBlocks[0].question.trim() &&
-      !questionBlocks[0].answer.trim()) ||
-    questionBlocks.length === 0;
+  const autoSave = useCallback(async () => {
+    const isNoteEmpty = isEditorContentEmpty(note);
+    const isQuestionBlocksEmpty =
+      (questionBlocks.length === 1 &&
+        !questionBlocks[0].question.trim() &&
+        !questionBlocks[0].answer.trim()) ||
+      questionBlocks.length === 0;
 
-  if (!title.trim() && isNoteEmpty && isQuestionBlocksEmpty) return;
+    if (!title.trim() && isNoteEmpty && isQuestionBlocksEmpty) return;
+    if (isSavingRef.current) return;
 
-  if (isSavingRef.current) return; // prevent double trigger
+    isSavingRef.current = true;
 
-  isSavingRef.current = true;
-
-  (async () => {
     if (notebookId) {
       await updateNotebook({
         id: notebookId,
@@ -64,14 +61,31 @@ useDebouncedEffect(() => {
         createdAt
       });
     } else {
-      const saved = await addNotebook({ title, note, questionBlocks  });
+      const saved = await addNotebook({ title, note, questionBlocks });
       setNotebookId(saved.id);
-      setCreatedAt(saved.createdAt || "")
+      setCreatedAt(saved.createdAt || "");
     }
 
     isSavingRef.current = false;
-  })();
-}, [title, note, questionBlocks, notebookId], 500);
+  }, [note, questionBlocks, title, notebookId, updateNotebook, createdAt, addNotebook]);
+
+  useDebouncedEffect(() => {
+    autoSave();
+  }, [autoSave], 500);
+
+  useEffect(() => {
+
+    const handleBeforeUnload = () => {
+      autoSave();
+      console.log("Saving notebook before unload-2");
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [autoSave]);
 
 
 
