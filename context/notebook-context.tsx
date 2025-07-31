@@ -45,6 +45,7 @@ export function NotebookProvider({ children }: { children: React.ReactNode }) {
     }
   }, [userId]);
 
+
   useEffect(() => {
     if (!isLoaded) return; // Wait for auth to load
 
@@ -64,8 +65,6 @@ export function NotebookProvider({ children }: { children: React.ReactNode }) {
       window.removeEventListener("focus", onFocus);
     };
   }, [isLoaded, refresh]);
-
-  
 
   // CRUD functions
   
@@ -97,8 +96,12 @@ export function NotebookProvider({ children }: { children: React.ReactNode }) {
     });
 
     if (!res.ok) throw new Error("Failed to update notebook");
+
+    setNotebooks(prev =>
+      prev.map(item => (
+        (item.id == notebook.id ? notebook : item) 
+    )))
     
-    await refresh();
   };
 
   // Function to delete a notebook by ID
