@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Input } from "@/components/ui/input"
 import { NoteTab } from "./note-tab"
@@ -38,19 +38,21 @@ export function NoteEditor({ initialNotebook }: Props) {
 
 
 
-  const autoSave = useCallback(async () => {
-    const isNoteEmpty = isEditorContentEmpty(note);
-    const isQuestionBlocksEmpty =
-      (questionBlocks.length === 1 &&
-        !questionBlocks[0].question.trim() &&
-        !questionBlocks[0].answer.trim()) ||
-      questionBlocks.length === 0;
+useDebouncedEffect(() => {
+  const isNoteEmpty = isEditorContentEmpty(note);
+  const isQuestionBlocksEmpty =
+    (questionBlocks.length === 1 &&
+      !questionBlocks[0].question.trim() &&
+      !questionBlocks[0].answer.trim()) ||
+    questionBlocks.length === 0;
 
-    if (!title.trim() && isNoteEmpty && isQuestionBlocksEmpty) return;
-    if (isSavingRef.current) return;
+  if (!title.trim() && isNoteEmpty && isQuestionBlocksEmpty) return;
 
-    isSavingRef.current = true;
+  if (isSavingRef.current) return; // prevent double trigger
 
+  isSavingRef.current = true;
+
+  (async () => {
     if (notebookId) {
       await updateNotebook({
         id: notebookId,
@@ -61,33 +63,14 @@ export function NoteEditor({ initialNotebook }: Props) {
         createdAt
       });
     } else {
-      const saved = await addNotebook({ title, note, questionBlocks });
+      const saved = await addNotebook({ title, note, questionBlocks  });
       setNotebookId(saved.id);
-      setCreatedAt(saved.createdAt || "");
+      setCreatedAt(saved.createdAt || "")
     }
 
     isSavingRef.current = false;
-  }, [note, questionBlocks, title, notebookId, updateNotebook, createdAt, addNotebook]);
-
-  useDebouncedEffect(() => {
-    autoSave();
-  }, [autoSave], 500);
-
-  useEffect(() => {
-
-    const handleBeforeUnload = () => {
-      autoSave();
-      console.log("Saving notebook before unload-2");
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, [autoSave]);
-
-
+  })();
+}, [title, note, questionBlocks, notebookId], 500);
 
   return (
     <div className="space-y-6">
