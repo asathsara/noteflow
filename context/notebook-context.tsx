@@ -31,7 +31,7 @@ export function NotebookProvider({ children }: { children: React.ReactNode }) {
 
   const refresh = useCallback(async () => {
     if (!userId) {
-      setNotebooks([]); // Clear if no user
+      setNotebooks([]); // Clear notebooks if no userId
       return;
     }
     setLoading(true);

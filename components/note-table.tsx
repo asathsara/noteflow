@@ -15,9 +15,15 @@ import { DeleteAlertDialog } from "./delete-dialog"
 import { useNotebooks } from "@/context/notebook-context"
 import { NoNotebooks } from "./no-notebooks"
 import { LoadingTable } from "./loading-table"
+import { useEffect } from "react"
 
 export function NoteTable() {
-  const { notebooks, deleteById, loading } = useNotebooks()
+  const { notebooks, deleteById, loading, refresh } = useNotebooks()
+
+
+  useEffect(()=>{
+    refresh()
+  }, [refresh])
 
   if (loading) {
     return <LoadingTable />
