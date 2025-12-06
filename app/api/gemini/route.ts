@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
 
     // Call Gemini API to get the answer
     const { text } = await generateText({
-      model: google("models/gemini-1.5-flash-latest"),
+      model: google("models/gemini-2.5-flash"),
       prompt: question,
     })
 
